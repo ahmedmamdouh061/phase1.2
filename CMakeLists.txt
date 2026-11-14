@@ -19,3 +19,13 @@ if(MSVC)
 else()
     target_compile_options(car_service_core PRIVATE -Wall -Wextra -pedantic)
 endif()
+
+enable_testing()
+
+add_executable(service_request_tests
+    tests/ServiceRequestTests.cpp
+)
+
+target_link_libraries(service_request_tests PRIVATE car_service_core)
+
+add_test(NAME service_request_tests COMMAND service_request_tests)
