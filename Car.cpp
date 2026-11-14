@@ -1,0 +1,163 @@
+#include "Car.h"
+#include "Bay.h"
+#include <cstdlib>
+
+Car::Car(int id, int vt, int pt, int dd)
+	: ID(id), VT(vt), PT(pt), DD(dd),
+	seqType(SequenceType::SS), status(CarStatus::IDLE), assignedBay(nullptr),
+	currentUnit(UnitType::DU), currentEndTime(-1),
+	TW(0), TS(0), FT(-1), CT(-1), rescheduled(false)
+{
+}
+
+// ---------------- getters ----------------
+
+int Car::getID() const { return ID; }
+int Car::getVT() const { return VT; }
+int Car::getPT() const { return PT; }
+int Car::getDD() const { return DD; }
+CarStatus Car::getStatus() const { return status; }
+SequenceType Car::getSequenceType() const { return seqType; }
+Bay* Car::getBay() const { return assignedBay; }
+UnitType Car::getCurrentUnit() const { return currentUnit; }
+int Car::getCurrentEndTime() const { return currentEndTime; }
+int Car::getTW() const { return TW; }
+int Car::getTS() const { return TS; }
+int Car::getFT() const { return FT; }
+int Car::getCT() const { return CT; }
+bool Car::isRescheduled() const { return rescheduled; }
+
+// ---------------- state changes ----------------
+
+void Car::setStatus(CarStatus s) { status = s; }
+
+void Car::AssignBay(Bay* bay, int endTime)
+{
+	assignedBay = bay;
+	currentEndTime = endTime;
+	if (bay)
+		currentUnit = bay->getType();
+}
+
+Bay* Car::ReleaseBay()
+{
+	Bay* bay = assignedBay;
+	assignedBay = nullptr;
+	currentEndTime = -1;
+	return bay;
+}
+
+void Car::setCurrentUnit(UnitType u) { currentUnit = u; }
+
+// ---------------- required services ----------------
+
+void Car::GenerateRandomServices()
+{
+	// 1 to 3 services, each of a random type with a random duration (1..10)
+	int n = 1 + rand() % 3;
+	for (int i = 0; i < n; i++)
+	{
+		UnitType t = static_cast<UnitType>(1 + rand() % 3);	// MU, EU or WU
+		AddService(t, 1 + rand() % 10);
+	}
+	seqType = (rand() % 2 == 0) ? SequenceType::SS : SequenceType::FS;
+}
+
+void Car::AddService(UnitType type, int duration)
+{
+	services.enqueue(Service(type, duration));
+}
+
+bool Car::HasService(UnitType type) const { return services.HasType(type); }
+
+bool Car::HasServicesLeft() const { return !services.isEmpty(); }
+
+int Car::getServicesCount() const { return services.getCount(); }
+
+bool Car::getFirstServiceType(UnitType& type) const
+{
+	Service s;
+	if (!services.peek(s))
+		return false;
+	type = s.type;
+	return true;
+}
+
+int Car::getNextServiceDuration() const
+{
+	return services.GetDurationOfType(currentUnit);
+}
+
+void Car::CompleteService(UnitType t, int timeSpent)
+{
+	Service done;
+	if (!services.RemoveByType(t, done))
+		services.dequeue(done);
+	TS += timeSpent;
+}
+
+// ---------------- end of life ----------------
+
+void Car::Finish(int timestep)
+{
+	status = CarStatus::FNSH;
+	FT = timestep;
+	TW = FT - VT - TS;		// FT = VT + TW + TS
+	if (TW < 0) TW = 0;
+}
+
+void Car::Cancel(int timestep)
+{
+	status = CarStatus::CNCL;
+	CT = timestep;
+	FT = timestep;			// for cancelled cars, finish time = cancel time
+	TW = FT - VT - TS;
+	if (TW < 0) TW = 0;
+}
+
+void Car::Reschedule(int newVT, int newPT)
+{
+	VT = newVT;
+	PT = newPT;
+	rescheduled = true;
+	status = CarStatus::IDLE;
+}
+
+// ---------------- printing ----------------
+
+void Car::Print(ostream& out) const
+{
+	out << "[C" << ID << ", ";
+	switch (status)
+	{
+	case CarStatus::IDLE:
+	case CarStatus::ERLY:
+	case CarStatus::LATE:
+	case CarStatus::REDY:
+		out << VT << ", " << PT;
+		break;
+	case CarStatus::DIAG:
+	case CarStatus::SERV:
+		out << assignedBay;			// uses operator<< of Bay*
+		break;
+	case CarStatus::WAIT:
+		out << getNextServiceDuration();
+		break;
+	case CarStatus::CNCL:
+		out << CT;
+		break;
+	case CarStatus::FNSH:
+		out << FT;
+		break;
+	}
+	out << "]";
+}
+
+ostream& operator<<(ostream& out, const Car* car)
+{
+	if (car)
+		car->Print(out);
+	else
+		out << "null";
+	return out;
+}

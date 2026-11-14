@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{FB1C6DB8-CE1C-5381-8E10-C7D6F5AB7FFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{E1B4F3C0-C3D2-5BDE-9DC2-9B7781BD0E71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DS">
+      <UniqueIdentifier>{B1F3DE07-6CD1-5109-BA30-7BD95832F04D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Lists">
+      <UniqueIdentifier>{0CF42B99-9872-5B84-95D5-FFEBEDF3373C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Center.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Car.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Center.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\Node.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\QueueADT.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\LinkedQueue.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\priNode.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\priQueue.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\StackADT.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DS\ArrayStack.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists\IDLE_List.h">
+      <Filter>Header Files\Lists</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists\ERLY_List.h">
+      <Filter>Header Files\Lists</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists\LATE_List.h">
+      <Filter>Header Files\Lists</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists\WaitLists.h">
+      <Filter>Header Files\Lists</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists\RequiredServices.h">
+      <Filter>Header Files\Lists</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

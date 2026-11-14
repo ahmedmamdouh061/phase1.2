@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+project(CarServiceCenter CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_executable(CarServiceCenter main.cpp Center.cpp Car.cpp Bay.cpp UI.cpp)

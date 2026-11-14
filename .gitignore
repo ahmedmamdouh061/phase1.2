@@ -1,0 +1,16 @@
+# Visual Studio
+.vs/
+Debug/
+Release/
+x64/
+*.user
+*.suo
+*.vsp
+*.psess
+# CMake / other builds
+build/
+out/
+*.o
+*.exe
+*.pdb
+*.ilk
