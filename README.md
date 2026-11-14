@@ -4,12 +4,13 @@ C++ Data Structures and Algorithms project (Team T14, Fall 2026).
 
 ## Project status
 
-This repository is being prepared for the Phase 1.2 implementation. The Phase 1.1 design has been reviewed, but the implementation is intentionally not guessed: the official Phase 1.2 specification, Appendix A class definitions, and course lab headers are still needed before the code can be completed and tested against the required interfaces.
+Implementation has started on the `phase1.2-development` branch. The first service-request class and CMake build target are in place. The Phase 1.1 design has been reviewed; project-specific list classes will be built on the course lab data structures, not on replacement containers.
 
 ## Planned source layout
 
-- `include/` — project class declarations
-- `src/` — project implementations and simulator
+- `include/` — project class declarations (currently includes `ServiceRequest.h`)
+- `src/` — project implementations (currently includes `ServiceRequest.cpp`)
+- `CMakeLists.txt` — C++11 build configuration
 - `LabStructures/` — the exact course-provided stack, queue, and priority-queue headers
 - `docs/` — implementation notes and requirement checklist
 
@@ -29,6 +30,6 @@ The design uses pointer-based lists and the course data structures (or derived c
 
 ## Build status
 
-No build or runtime test is claimed yet. The exact lab headers and assignment-required class members must be added first; then the project can be compiled and tested using the course's expected compiler and interfaces.
+The initial CMake target is configured, but no successful build or runtime test is claimed yet. The remaining project classes must match the assignment's Appendix A and use the course lab data-structure APIs.
 
 See [docs/REQUIREMENTS_CHECKLIST.md](docs/REQUIREMENTS_CHECKLIST.md) for the remaining inputs and implementation checklist.
