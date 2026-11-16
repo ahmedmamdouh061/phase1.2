@@ -1,7 +1,5 @@
 #include "Bay.h"
 
-// ======================= Bay =======================
-
 Bay::Bay(int id, UnitType t) : ID(id), type(t), busyTime(0)
 {
 }
@@ -28,8 +26,6 @@ void Bay::Print(ostream& out) const
 {
 	out << getPrefix() << ID;
 }
-
-// ================== Derived bays ==================
 
 DiagBay::DiagBay(int id) : Bay(id, UnitType::DU) {}
 
@@ -67,8 +63,6 @@ void WashBay::Print(ostream& out) const
 {
 	out << getPrefix() << ID << "(" << getRemainingCapacity() << ")";
 }
-
-// ================== operator<< ==================
 
 ostream& operator<<(ostream& out, const Bay* bay)
 {

@@ -1,10 +1,6 @@
 #include "Center.h"
 #include <cstdlib>
 
-// =====================================================================
-//                       construction / destruction
-// =====================================================================
-
 Center::Center()
 	: currentTime(1), totalCars(0),
 	N_DU(0), N_MU(0), N_EU(0), N_WU(0), WB_Cap(0), Pcancel(0), Presc(0),
@@ -15,7 +11,6 @@ Center::Center()
 
 Center::~Center()
 {
-	// Each car is in exactly one list, so deleting the cars of every list deletes each car once.
 	Car* car;
 	int pri;
 	while (IDLE.dequeue(car)) delete car;
@@ -30,7 +25,6 @@ Center::~Center()
 	if (CNCL) { while (CNCL->pop(car)) delete car; delete CNCL; }
 	if (FNSH) { while (FNSH->pop(car)) delete car; delete FNSH; }
 
-	// Bays: the free lists only point to them, the arrays own them
 	for (int i = 0; i < N_DU; i++) delete diagBays[i];
 	for (int i = 0; i < N_MU; i++) delete mechBays[i];
 	for (int i = 0; i < N_EU; i++) delete elecBays[i];
@@ -40,10 +34,6 @@ Center::~Center()
 	delete[] elecBays;
 	delete[] washBays;
 }
-
-// =====================================================================
-//                               setup
-// =====================================================================
 
 void Center::CreateBays(int nDU, int nMU, int nEU, int nWU, int wbCap)
 {
@@ -81,23 +71,17 @@ void Center::GenerateRandomCars(int n)
 	CNCL = new ArrayStack<Car*>(n);
 	FNSH = new ArrayStack<Car*>(n);
 
-	// Cars are generated sorted by VT, so the IDLE list is sorted by VT
 	int vt = 1;
 	for (int id = 1; id <= n; id++)
 	{
-		vt += rand() % 2;						// next car arrives at the same or the next timestep
-		int pt = vt + (rand() % 11) - 5;		// appointment within +-5 timesteps of arrival
+		vt += rand() % 2;
+		int pt = vt + (rand() % 11) - 5;
 		if (pt < 1) pt = 1;
-		int dd = 1 + rand() % 5;				// diagnosis duration 1..5
+		int dd = 1 + rand() % 5;
 		IDLE.enqueue(new Car(id, vt, pt, dd));
 	}
 }
 
-// =====================================================================
-//                     phase 1 random simulator steps
-// =====================================================================
-
-// 2.1 Pick the top 50 cars from IDLE and distribute them randomly on LATE, ERLY and REDY
 void Center::Step_IdleToArrivalLists()
 {
 	Car* car;
@@ -121,7 +105,6 @@ void Center::Step_IdleToArrivalLists()
 	}
 }
 
-// 2.2 Move top 6 cars from ERLY to REDY
 void Center::Step_ErlyToRedy()
 {
 	Car* car;
@@ -133,7 +116,6 @@ void Center::Step_ErlyToRedy()
 	}
 }
 
-// 2.3 With probability 10%, pick one random car (not the top one) from LATE and move it to CNCL
 void Center::Step_LateRandomCancel()
 {
 	if (rand() % 100 >= P1_LATE_CANCEL_PROB)
@@ -143,7 +125,6 @@ void Center::Step_LateRandomCancel()
 		CancelCar(car);
 }
 
-// 2.4 Move top 6 cars from LATE to REDY
 void Center::Step_LateToRedy()
 {
 	Car* car;
@@ -154,8 +135,6 @@ void Center::Step_LateToRedy()
 	}
 }
 
-// 2.5 For each available DIAG bay, assign one car from REDY
-// 2.6 Diagnosis takes 3 timesteps for each car
 void Center::Step_AssignDiagBays()
 {
 	DiagBay* bay;
@@ -167,12 +146,10 @@ void Center::Step_AssignDiagBays()
 		int endTime = currentTime + P1_DIAG_TIME;
 		car->AssignBay(bay, endTime);
 		car->setStatus(CarStatus::DIAG);
-		DIAG.enqueue(car, -endTime);		// earliest end time = highest priority
+		DIAG.enqueue(car, -endTime);
 	}
 }
 
-// 2.7 Pick all cars that spent 3 timesteps in DIAG and move them randomly to one of the
-//     WAIT lists, or to CNCL with probability 20%. Free their DIAG bays.
 void Center::Step_FinishDiagnosis()
 {
 	Car* car;
@@ -183,7 +160,7 @@ void Center::Step_FinishDiagnosis()
 		Bay* bay = car->ReleaseBay();
 		ReturnBay(bay);
 
-		car->GenerateRandomServices();		// the diagnosis unit assigns random services
+		car->GenerateRandomServices();
 
 		if (rand() % 100 < P1_DIAG_CANCEL_PROB)
 			CancelCar(car);
@@ -192,10 +169,6 @@ void Center::Step_FinishDiagnosis()
 	}
 }
 
-// 2.8 Pick top 6 cars from WAIT lists and assign each to a random bay with
-//     probability MB = 60%, EB = 30%, WB = 10%.
-//     If there is no available bay to assign, don't pick the car from the WAIT list.
-// 2.9 Any service takes 4 timesteps.
 void Center::Step_AssignServiceBays()
 {
 	for (int i = 0; i < P1_WAIT_PICK; i++)
@@ -207,19 +180,17 @@ void Center::Step_AssignServiceBays()
 
 		Bay* bay = TakeFreeBay(t);
 		if (!bay)
-			continue;			// no free bay: the car stays in the WAIT list
+			continue;
 
 		Car* car;
 		waitList.dequeue(car);
 		int endTime = currentTime + P1_SERV_TIME;
 		car->AssignBay(bay, endTime);
 		car->setStatus(CarStatus::SERV);
-		SERV.enqueue(car, -endTime);		// earliest end time = highest priority
+		SERV.enqueue(car, -endTime);
 	}
 }
 
-// 2.10 Pick all cars that spent 4 timesteps in SERV and move each of them to FNSH with
-//      probability 40%, or to a WAIT list again. Free their bays.
 void Center::Step_FinishService()
 {
 	Car* car;
@@ -242,39 +213,39 @@ void Center::Step_FinishService()
 
 void Center::SimulateRandomTimestep()
 {
-	Step_IdleToArrivalLists();	// 2.1
-	Step_ErlyToRedy();			// 2.2
-	Step_LateRandomCancel();	// 2.3
-	Step_LateToRedy();			// 2.4
-	Step_AssignDiagBays();		// 2.5, 2.6
-	Step_FinishDiagnosis();		// 2.7
-	Step_AssignServiceBays();	// 2.8, 2.9
-	Step_FinishService();		// 2.10
+	Step_IdleToArrivalLists();
+	Step_ErlyToRedy();
+	Step_LateRandomCancel();
+	Step_LateToRedy();
+	Step_AssignDiagBays();
+	Step_FinishDiagnosis();
+	Step_AssignServiceBays();
+	Step_FinishService();
 }
 
 void Center::RunRandomSimulation()
 {
 	CreateBays(P1_N_DU, P1_N_MU, P1_N_EU, P1_N_WU, P1_WB_CAP);
-	GenerateRandomCars(P1_NUM_CARS);		// 1. at least 1000 IDLE cars
+	GenerateRandomCars(P1_NUM_CARS);
 	currentTime = 1;
 
 	ui.PrintStartMessage();
 
-	bool stepByStep = true;				// false after the user presses E
+	bool stepByStep = true;
 
 	while (true)
 	{
-		SimulateRandomTimestep();		// 2.1 .. 2.10
+		SimulateRandomTimestep();
 
 		if (stepByStep)
-			PrintInterface();			// 2.11
+			PrintInterface();
 
-		if (AllCarsDone())				// 3. all cars are in FNSH or CNCL
+		if (AllCarsDone())
 			break;
 
 		if (stepByStep)
 		{
-			stepByStep = ui.WaitForKey();	// N: next step, E: go to the end
+			stepByStep = ui.WaitForKey();
 			if (!stepByStep)
 				ui.PrintSkippingToEnd();
 		}
@@ -282,14 +253,10 @@ void Center::RunRandomSimulation()
 	}
 
 	if (!stepByStep)
-		PrintInterface();				// show the lists at the last timestep
+		PrintInterface();
 
 	ui.PrintSimulationEnd(currentTime, FNSH->getCount(), CNCL->getCount());
 }
-
-// =====================================================================
-//                                helpers
-// =====================================================================
 
 WaitList& Center::GetWaitList(UnitType t)
 {
@@ -301,19 +268,13 @@ WaitList& Center::GetWaitList(UnitType t)
 	}
 }
 
-// Phase 1: the car joins a random WAIT list. If the car has no remaining service of that
-// type, one is added, so its "next Serv Time" in the WAIT list is always meaningful.
-// The list is chosen with the same odds as the bays in step 2.8 (MU 60%, EU 30%, WU 10%).
-// With equal odds (1/3 each) a third of the cars wait for the wash unit, but a wash bay is
-// picked only 10% of the time, so the WB list keeps growing and the run takes ~1400 steps.
-// To use equal odds instead, replace RandomBayType() with RandomServiceUnit().
 void Center::MoveToRandomWaitList(Car* car)
 {
 	UnitType t = RandomBayType();
 	if (!car->HasService(t))
 		car->AddService(t, 1 + rand() % 10);
 
-	car->setCurrentUnit(t);			// must be set before enqueue (WAIT total uses it)
+	car->setCurrentUnit(t);
 	car->setStatus(CarStatus::WAIT);
 	GetWaitList(t).enqueue(car);
 }
@@ -334,7 +295,6 @@ Bay* Center::TakeFreeBay(UnitType t)
 	}
 	case UnitType::WU:
 	{
-		// A wash bay stays in the free list while it has capacity left
 		WashBay* bay;
 		if (!Free_WU_List.peek(bay))
 			return nullptr;
@@ -367,7 +327,6 @@ void Center::ReturnBay(Bay* bay)
 		break;
 	case UnitType::WU:
 	{
-		// A full wash bay is not in the free list; it goes back once a car leaves it
 		WashBay* wb = static_cast<WashBay*>(bay);
 		bool wasFull = wb->isFull();
 		wb->removeCar();
@@ -392,17 +351,17 @@ void Center::FinishCar(Car* car)
 
 UnitType Center::RandomServiceUnit() const
 {
-	return static_cast<UnitType>(1 + rand() % 3);	// MU, EU or WU
+	return static_cast<UnitType>(1 + rand() % 3);
 }
 
 UnitType Center::RandomBayType() const
 {
 	int r = rand() % 100;
 	if (r < P1_MB_PROB)
-		return UnitType::MU;					// 60%
+		return UnitType::MU;
 	if (r < P1_MB_PROB + P1_EB_PROB)
-		return UnitType::EU;					// 30%
-	return UnitType::WU;						// 10%
+		return UnitType::EU;
+	return UnitType::WU;
 }
 
 bool Center::AllCarsDone() const
@@ -410,16 +369,12 @@ bool Center::AllCarsDone() const
 	return FNSH->getCount() + CNCL->getCount() == totalCars;
 }
 
-// =====================================================================
-//                       interactive mode screen
-// =====================================================================
-
 void Center::PrintInterface() const
 {
 	ui.PrintTimestep(currentTime);
 
 	ui.PrintSectionHeader("IDLE Cars [CarID, VT, PT]");
-	ui.PrintList("cars", IDLE, " ", IDLE_PRINT_LIMIT);		// ONLY the first 15 cars
+	ui.PrintList("cars", IDLE, " ", IDLE_PRINT_LIMIT);
 
 	ui.PrintSectionHeader("ERLY & LATE & REDY Cars [CarID, VT, PT]");
 	ui.PrintList("ERLY", ERLY);

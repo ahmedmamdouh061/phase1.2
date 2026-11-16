@@ -60,4 +60,4 @@ Node<T>* Node<T>::getNext() const
 	return next;
 }
 
-#endif // _NODE  (moved to the end of the file so the definitions are guarded too)
+#endif

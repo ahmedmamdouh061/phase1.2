@@ -11,7 +11,7 @@ class priQueue
 {
 protected:  //in case you need to inherit for the project
     priNode<T>* head;
-    int count;      // [Project] number of items in the queue
+    int count;
 public:
     priQueue() : head(nullptr), count(0) {}
 
@@ -65,13 +65,8 @@ public:
         return head == nullptr;
     }
 
-    // [Project] added for the project: count and print
-
-    // O(1)
     int getCount() const { return count; }
 
-    // O(n): prints items from highest to lowest priority separated by "separator".
-    // maxItems = -1 prints all. T must have operator<< (overloaded for Car*).
     void print(const char* separator = " ", int maxItems = -1) const {
         priNode<T>* ptr = head;
         int printed = 0, pri;
@@ -83,7 +78,6 @@ public:
         }
     }
 
-    // The queue owns its nodes: copying it would share them, so copying is disabled.
     priQueue(const priQueue<T>&) = delete;
     priQueue<T>& operator=(const priQueue<T>&) = delete;
 };

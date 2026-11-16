@@ -14,8 +14,6 @@
 using namespace std;
 
 //Unless spesificed by the stack user, the default size is 100
-// [Project] the size is now a constructor parameter (the project has 1000+ cars,
-//           so the fixed size of 100 is too small). The array is allocated once.
 template<typename T>
 class ArrayStack : public StackADT<T>
 {
@@ -23,7 +21,7 @@ class ArrayStack : public StackADT<T>
 protected:  //in case you need to inherit for the project
 	T* items;		// Array of stack items
 	int top;                   // Index to top of stack
-	int capacity;              // [Project] size of the array
+	int capacity;
 
 public:
 
@@ -39,7 +37,6 @@ public:
 		delete[] items;
 	}
 
-	// The stack owns its array: copying would share it, so copying is disabled.
 	ArrayStack(const ArrayStack<T>&) = delete;
 	ArrayStack<T>& operator=(const ArrayStack<T>&) = delete;
 
@@ -74,16 +71,11 @@ public:
 		return true;
 	}  // end peek
 
-	// [Project] added for the project: count and print
-
-	// O(1)
 	int getCount() const
 	{
 		return top + 1;
 	}
 
-	// O(n): prints from top to bottom (most recent first) separated by "separator".
-	// maxItems = -1 prints all. T must have operator<< (overloaded for Car*).
 	void print(const char* separator = " ", int maxItems = -1) const
 	{
 		int printed = 0;

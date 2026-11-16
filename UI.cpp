@@ -1,7 +1,7 @@
 #include "UI.h"
 
 #ifdef _WIN32
-#include <conio.h>		// _getch(): reads one key press on Windows
+#include <conio.h>
 #endif
 
 void UI::PrintStartMessage() const
@@ -30,20 +30,19 @@ bool UI::WaitForKey() const
 	while (true)
 	{
 #ifdef _WIN32
-		int key = _getch();				// reads the key directly (no Enter needed)
+		int key = _getch();
 #else
-		int key = cin.get();			// other systems: type the letter then Enter
+		int key = cin.get();
 		int c = key;
-		while (c != '\n' && c != EOF)	// ignore the rest of the line
+		while (c != '\n' && c != EOF)
 			c = cin.get();
 		if (c == EOF)
 			return false;
 #endif
 		if (key == 'n' || key == 'N')
-			return true;				// next timestep
+			return true;
 		if (key == 'e' || key == 'E')
-			return false;				// go to the end
-		// any other key is ignored: keep waiting for N or E
+			return false;
 	}
 }
 

@@ -10,8 +10,6 @@ Car::Car(int id, int vt, int pt, int dd)
 {
 }
 
-// ---------------- getters ----------------
-
 int Car::getID() const { return ID; }
 int Car::getVT() const { return VT; }
 int Car::getPT() const { return PT; }
@@ -26,8 +24,6 @@ int Car::getCT() const { return CT; }
 int Car::getTW() const { return TW; }
 int Car::getTS() const { return TS; }
 bool Car::isRescheduled() const { return rescheduled; }
-
-// ---------------- state changes ----------------
 
 void Car::setStatus(CarStatus s) { status = s; }
 
@@ -49,15 +45,12 @@ Bay* Car::ReleaseBay()
 
 void Car::setCurrentUnit(UnitType u) { currentUnit = u; }
 
-// ---------------- required services ----------------
-
 void Car::GenerateRandomServices()
 {
-	// 1 to 3 services, each of a random type with a random duration (1..10)
 	int n = 1 + rand() % 3;
 	for (int i = 0; i < n; i++)
 	{
-		UnitType t = static_cast<UnitType>(1 + rand() % 3);	// MU, EU or WU
+		UnitType t = static_cast<UnitType>(1 + rand() % 3);
 		AddService(t, 1 + rand() % 10);
 	}
 	seqType = (rand() % 2 == 0) ? SequenceType::SS : SequenceType::FS;
@@ -86,8 +79,6 @@ void Car::CompleteService(UnitType t)
 		services.dequeue(done);
 }
 
-// ---------------- end of life ----------------
-
 void Car::Finish(int timestep)
 {
 	status = CarStatus::FNSH;
@@ -98,10 +89,8 @@ void Car::Cancel(int timestep)
 {
 	status = CarStatus::CNCL;
 	CT = timestep;
-	FT = timestep;			// for cancelled cars, finish time = cancel time
+	FT = timestep;
 }
-
-// ---------------- printing ----------------
 
 void Car::Print(ostream& out) const
 {
@@ -116,7 +105,7 @@ void Car::Print(ostream& out) const
 		break;
 	case CarStatus::DIAG:
 	case CarStatus::SERV:
-		// Bay ID only, e.g. "D9", "M4", "W1" (no wash bay capacity here)
+
 		if (assignedBay)
 			out << assignedBay->getPrefix() << assignedBay->getID();
 		break;

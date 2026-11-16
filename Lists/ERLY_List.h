@@ -3,29 +3,15 @@
 #include "../DS/priQueue.h"
 #include "../Car.h"
 
-/*
-  ERLY List (member of Center)
-  A class derived from Priority Queue.
-  Why Priority Queue: early cars must be ordered by appointment time (PT), so the
-                      car with the earliest PT is checked first.
-  Why derived: to remove a random car from any position (needed when a car reschedules).
-
-  The lab priQueue puts the HIGHEST priority first, so we use priority = -PT
-  (smallest PT -> highest priority).
-
-  Operations: enqueue (sorted by PT) O(n), dequeue O(1), peek O(1),
-              RemoveRandomCar O(n), print all O(n)
-*/
 class ERLY_List : public priQueue<Car*>
 {
 public:
-	// Adds an early car in its place according to its PT. O(n)
+
 	void AddCar(Car* car)
 	{
 		enqueue(car, -car->getPT());
 	}
 
-	// Removes a random car (any position). Used for rescheduling. O(n)
 	bool RemoveRandomCar(Car*& car)
 	{
 		if (isEmpty())
@@ -34,7 +20,7 @@ public:
 	}
 
 private:
-	// Removes the car at position index (0 = head). O(n)
+
 	bool RemoveAt(int index, Car*& car)
 	{
 		if (index < 0 || index >= count)

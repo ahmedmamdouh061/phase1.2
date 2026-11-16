@@ -54,7 +54,7 @@ class LinkedQueue:public QueueADT<T>
 protected:  //in case you need to inherit for the project	
 	Node<T>* backPtr;
 	Node<T>* frontPtr;
-	int count;		// [Project] number of items in the queue
+	int count;
 public :
 	LinkedQueue();	
 	bool isEmpty() const ;
@@ -66,7 +66,6 @@ public :
 	//copy constructor
 	LinkedQueue(const LinkedQueue<T> & LQ);
 
-	// [Project] added for the project: count and print
 	int getCount() const;
 	void print(const char* separator = " ", int maxItems = -1) const;
 };
@@ -208,19 +207,12 @@ LinkedQueue<T>::LinkedQueue(const LinkedQueue<T> & LQ)
 	}	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// [Project] Function: getCount  -> O(1)
 template <typename T>
 int LinkedQueue<T>::getCount() const
 {
 	return count;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// [Project] Function: print  -> O(n)
-// Prints the items from front to back separated by "separator".
-// maxItems = -1 prints all items, otherwise prints only the first maxItems items.
-// T must have operator<< (we overload it for Car* and Bay*)
 template <typename T>
 void LinkedQueue<T>::print(const char* separator, int maxItems) const
 {

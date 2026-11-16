@@ -2,26 +2,16 @@
 #include <iostream>
 using namespace std;
 
-/*
-  UI: all console input/output of the program goes through this class.
-  The Center calls these functions to print each part of the output screen.
-  Phase 1 runs in interactive mode only (silent mode is not required in phase 1).
-*/
 class UI
 {
 public:
 	void PrintStartMessage() const;
 	void PrintTimestep(int timestep) const;
 
-	// "==============  title  =============="
 	void PrintSectionHeader(const char* title) const;
 
-	// "-------------- title --------------"
 	void PrintSubHeader(const char* title) const;
 
-	// Prints one list line:  "<count> <label>: <items>"
-	// maxItems = -1 prints all. If the list has more items, prints ".... and so on"
-	// The list type L must have getCount() and print(separator, maxItems).
 	template <typename L>
 	void PrintList(const char* label, const L& list, const char* separator = " ", int maxItems = -1) const
 	{
@@ -32,10 +22,6 @@ public:
 		cout << endl;
 	}
 
-	// Waits for the user after each timestep:
-	//   N -> returns true  (move to the next timestep)
-	//   E -> returns false (go to the end of the simulation without stopping)
-	//   any other key is ignored
 	bool WaitForKey() const;
 
 	void PrintSkippingToEnd() const;
