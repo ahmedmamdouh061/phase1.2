@@ -34,7 +34,7 @@ public:
 
 	// Waits for the user after each timestep:
 	//   any key -> returns true  (move to the next timestep)
-	//   SHIFT   -> returns false (go to the end of the simulation without stopping)
+	//   E       -> returns false (go to the end of the simulation without stopping)
 	bool WaitForKey() const;
 
 	void PrintSkippingToEnd() const;

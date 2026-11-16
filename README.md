@@ -17,7 +17,7 @@ lists each timestep and waits for **any key** ("PRESS ANY KEY TO MOVE TO NEXT ST
 A run ends by itself when all cars are in FNSH or CNCL, after about **430–550 timesteps**.
 
 - **Any key** → next timestep (step by step)
-- **SHIFT** → go to the end: the remaining timesteps run without stopping, then the last
+- **E** → go to the end: the remaining timesteps run without stopping, then the last
   timestep's lists and the result are printed
 
 ## Phase 1.2 only

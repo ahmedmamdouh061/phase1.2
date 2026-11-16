@@ -260,7 +260,7 @@ void Center::RunRandomSimulation()
 
 	ui.PrintStartMessage();
 
-	bool stepByStep = true;				// false after the user presses SHIFT
+	bool stepByStep = true;				// false after the user presses E
 
 	while (true)
 	{
@@ -274,7 +274,7 @@ void Center::RunRandomSimulation()
 
 		if (stepByStep)
 		{
-			stepByStep = ui.WaitForKey();	// any key: next step, SHIFT: go to the end
+			stepByStep = ui.WaitForKey();	// any key: next step, E: go to the end
 			if (!stepByStep)
 				ui.PrintSkippingToEnd();
 		}
