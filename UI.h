@@ -33,8 +33,9 @@ public:
 	}
 
 	// Waits for the user after each timestep:
-	//   any key -> returns true  (move to the next timestep)
-	//   E       -> returns false (go to the end of the simulation without stopping)
+	//   N -> returns true  (move to the next timestep)
+	//   E -> returns false (go to the end of the simulation without stopping)
+	//   any other key is ignored
 	bool WaitForKey() const;
 
 	void PrintSkippingToEnd() const;

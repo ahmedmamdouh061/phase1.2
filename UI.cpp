@@ -26,20 +26,25 @@ void UI::PrintSubHeader(const char* title) const
 
 bool UI::WaitForKey() const
 {
-	cout << "PRESS ANY KEY TO MOVE TO NEXT STEP !   (or press E to go to the end)" << endl;
+	cout << "PRESS N TO MOVE TO NEXT STEP, OR E TO GO TO THE END !" << endl;
+	while (true)
+	{
 #ifdef _WIN32
-	int key = _getch();
-	return !(key == 'e' || key == 'E');
+		int key = _getch();				// reads the key directly (no Enter needed)
 #else
-	// Other systems: press Enter for the next step, or type E then Enter to go to the end
-	int key = cin.get();
-	int c = key;
-	while (c != '\n' && c != EOF)		// ignore the rest of the line
-		c = cin.get();
-	if (c == EOF)
-		return false;
-	return !(key == 'e' || key == 'E');
+		int key = cin.get();			// other systems: type the letter then Enter
+		int c = key;
+		while (c != '\n' && c != EOF)	// ignore the rest of the line
+			c = cin.get();
+		if (c == EOF)
+			return false;
 #endif
+		if (key == 'n' || key == 'N')
+			return true;				// next timestep
+		if (key == 'e' || key == 'E')
+			return false;				// go to the end
+		// any other key is ignored: keep waiting for N or E
+	}
 }
 
 void UI::PrintSkippingToEnd() const

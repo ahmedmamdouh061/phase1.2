@@ -274,7 +274,7 @@ void Center::RunRandomSimulation()
 
 		if (stepByStep)
 		{
-			stepByStep = ui.WaitForKey();	// any key: next step, E: go to the end
+			stepByStep = ui.WaitForKey();	// N: next step, E: go to the end
 			if (!stepByStep)
 				ui.PrintSkippingToEnd();
 		}

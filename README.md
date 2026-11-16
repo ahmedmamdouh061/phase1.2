@@ -13,10 +13,10 @@ If VS asks to "Retarget Projects", click **OK**.
 **Other compilers:** `g++ -std=c++17 *.cpp -o CarServiceCenter`, or use `CMakeLists.txt`.
 
 The program runs in **interactive mode** (the only mode required in Phase 1): it prints all
-lists each timestep and waits for **any key** ("PRESS ANY KEY TO MOVE TO NEXT STEP !").
+lists each timestep and waits for the user ("PRESS N TO MOVE TO NEXT STEP, OR E TO GO TO THE END !").
 A run ends by itself when all cars are in FNSH or CNCL, after about **430–550 timesteps**.
 
-- **Any key** → next timestep (step by step)
+- **N** → next timestep (step by step). Any other key is ignored.
 - **E** → go to the end: the remaining timesteps run without stopping, then the last
   timestep's lists and the result are printed
 
@@ -54,7 +54,7 @@ Phase 2 logic.
 | `Car.h/.cpp` | Car data members, `Print()`, `operator<<(Car*)` (prints based on the car's status) |
 | `Bay.h/.cpp` | `Bay` base + `DiagBay`, `MechBay`, `ElecBay`, `WashBay` (capacity), `operator<<(Bay*)` |
 | `Center.h/.cpp` | Owns all cars, bays and lists. Runs the random simulator |
-| `UI.h/.cpp` | All console input/output: mode selection, the timestep screen, "press any key" |
+| `UI.h/.cpp` | All console input/output: the timestep screen and the N / E keys |
 | `Defs.h` | Enums (`CarStatus`, `UnitType`, `SequenceType`) and the Phase 1 simulator constants |
 
 ## Changes to the lab code
