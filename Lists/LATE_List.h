@@ -7,23 +7,20 @@
   LATE List (member of Center)
   A class derived from Queue.
   Why Queue: late cars wait in the order they arrive (FIFO).
-  Why derived: to remove a random car when it cancels (Pcancel).
+  Why derived: to remove a random car when it cancels.
 
   Operations: enqueue O(1), dequeue O(1), peek O(1), CancelRandomCar O(n), print all O(n)
 */
 class LATE_List : public LinkedQueue<Car*>
 {
 public:
-	// Removes a random car from the list.
-	// canPickFirst = false -> the first car is never picked (phase 1 rule 2.3:
-	//                         "pick one random car (not the top one)").
-	// canPickFirst = true  -> any car can be picked (phase 2 rule).   O(n)
-	bool CancelRandomCar(Car*& car, bool canPickFirst = true)
+	// Removes a random car from the list, but never the first one
+	// (rule 2.3: "pick one random car (not the top one)").   O(n)
+	bool CancelRandomCar(Car*& car)
 	{
-		int first = canPickFirst ? 0 : 1;
-		if (count <= first)
-			return false;			// no car can be picked
-		int index = first + rand() % (count - first);
+		if (count < 2)
+			return false;			// only the top car (or none): nothing to pick
+		int index = 1 + rand() % (count - 1);
 		return RemoveAt(index, car);
 	}
 

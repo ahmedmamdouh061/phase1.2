@@ -8,7 +8,7 @@
   A class derived from Priority Queue.
   Why Priority Queue: early cars must be ordered by appointment time (PT), so the
                       car with the earliest PT is checked first.
-  Why derived: to remove a random car when it reschedules (Presc).
+  Why derived: to remove a random car from any position (needed when a car reschedules).
 
   The lab priQueue puts the HIGHEST priority first, so we use priority = -PT
   (smallest PT -> highest priority).

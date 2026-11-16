@@ -6,7 +6,7 @@ Car::Car(int id, int vt, int pt, int dd)
 	: ID(id), VT(vt), PT(pt), DD(dd),
 	seqType(SequenceType::SS), status(CarStatus::IDLE), assignedBay(nullptr),
 	currentUnit(UnitType::DU), currentEndTime(-1),
-	TW(0), TS(0), FT(-1), CT(-1), rescheduled(false)
+	FT(-1), CT(-1)
 {
 }
 
@@ -21,11 +21,8 @@ SequenceType Car::getSequenceType() const { return seqType; }
 Bay* Car::getBay() const { return assignedBay; }
 UnitType Car::getCurrentUnit() const { return currentUnit; }
 int Car::getCurrentEndTime() const { return currentEndTime; }
-int Car::getTW() const { return TW; }
-int Car::getTS() const { return TS; }
 int Car::getFT() const { return FT; }
 int Car::getCT() const { return CT; }
-bool Car::isRescheduled() const { return rescheduled; }
 
 // ---------------- state changes ----------------
 
@@ -74,26 +71,16 @@ bool Car::HasServicesLeft() const { return !services.isEmpty(); }
 
 int Car::getServicesCount() const { return services.getCount(); }
 
-bool Car::getFirstServiceType(UnitType& type) const
-{
-	Service s;
-	if (!services.peek(s))
-		return false;
-	type = s.type;
-	return true;
-}
-
 int Car::getNextServiceDuration() const
 {
 	return services.GetDurationOfType(currentUnit);
 }
 
-void Car::CompleteService(UnitType t, int timeSpent)
+void Car::CompleteService(UnitType t)
 {
 	Service done;
 	if (!services.RemoveByType(t, done))
 		services.dequeue(done);
-	TS += timeSpent;
 }
 
 // ---------------- end of life ----------------
@@ -102,8 +89,6 @@ void Car::Finish(int timestep)
 {
 	status = CarStatus::FNSH;
 	FT = timestep;
-	TW = FT - VT - TS;		// FT = VT + TW + TS
-	if (TW < 0) TW = 0;
 }
 
 void Car::Cancel(int timestep)
@@ -111,16 +96,6 @@ void Car::Cancel(int timestep)
 	status = CarStatus::CNCL;
 	CT = timestep;
 	FT = timestep;			// for cancelled cars, finish time = cancel time
-	TW = FT - VT - TS;
-	if (TW < 0) TW = 0;
-}
-
-void Car::Reschedule(int newVT, int newPT)
-{
-	VT = newVT;
-	PT = newPT;
-	rescheduled = true;
-	status = CarStatus::IDLE;
 }
 
 // ---------------- printing ----------------

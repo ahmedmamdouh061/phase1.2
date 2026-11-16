@@ -2,28 +2,15 @@
 #include <iostream>
 using namespace std;
 
-enum class SimMode
-{
-	INTERACTIVE,
-	SILENT
-};
-
 /*
   UI: all console input/output of the program goes through this class.
   The Center calls these functions to print each part of the output screen.
+  Phase 1 runs in interactive mode only (silent mode is not required in phase 1).
 */
 class UI
 {
-private:
-	SimMode mode;
-
 public:
-	UI();
-
-	// Asks the user to choose interactive or silent mode
-	SimMode ReadMode();
-	SimMode getMode() const;
-
+	void PrintStartMessage() const;
 	void PrintTimestep(int timestep) const;
 
 	// "==============  title  =============="
@@ -47,7 +34,5 @@ public:
 
 	void WaitForKey() const;
 
-	void PrintSilentStart() const;
-	void PrintSilentEnd() const;
 	void PrintSimulationEnd(int timestep, int finished, int cancelled) const;
 };

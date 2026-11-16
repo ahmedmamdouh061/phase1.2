@@ -12,8 +12,21 @@ If VS asks to "Retarget Projects", click **OK**.
 
 **Other compilers:** `g++ -std=c++17 *.cpp -o CarServiceCenter`, or use `CMakeLists.txt`.
 
-When it starts, choose **1 = Interactive** (press any key for each timestep) or
-**2 = Silent**. A run takes about 450–500 timesteps.
+The program runs in **interactive mode** (the only mode required in Phase 1): it prints all
+lists each timestep and waits for **any key** ("PRESS ANY KEY TO MOVE TO NEXT STEP !").
+A run ends by itself when all cars are in FNSH or CNCL, after about **430–550 timesteps**.
+Hold a key down to move through the timesteps quickly.
+
+## Phase 1.2 only
+
+This code contains only what Phase 1.2 asks for. None of the Phase 2 logic is included:
+no input/output files, no silent mode, no real assignment rules (ERLY/LATE/FS logic),
+no rescheduling, no statistics (TW, TS, utilization).
+
+The list operations `IDLE_List::InsertCar` and `ERLY_List::RemoveRandomCar` are kept because
+Phase 1.2 requires "Full implementation for all data structures" and "all the lists of the project
+should be fully operating in phase 1". They are list operations from our Phase 1.1 report, not
+Phase 2 logic.
 
 ## Project rules followed
 

@@ -7,7 +7,7 @@
 
 Center::Center()
 	: currentTime(1), totalCars(0),
-	N_DU(0), N_MU(0), N_EU(0), N_WU(0), WB_Cap(0), Pcancel(0), Presc(0),
+	N_DU(0), N_MU(0), N_EU(0), N_WU(0), WB_Cap(0),
 	diagBays(nullptr), mechBays(nullptr), elecBays(nullptr), washBays(nullptr),
 	CNCL(nullptr), FNSH(nullptr)
 {
@@ -81,7 +81,7 @@ void Center::GenerateRandomCars(int n)
 	CNCL = new ArrayStack<Car*>(n);
 	FNSH = new ArrayStack<Car*>(n);
 
-	// Cars are generated sorted by VT (like the input file in phase 2)
+	// Cars are generated sorted by VT, so the IDLE list is sorted by VT
 	int vt = 1;
 	for (int id = 1; id <= n; id++)
 	{
@@ -139,7 +139,7 @@ void Center::Step_LateRandomCancel()
 	if (rand() % 100 >= P1_LATE_CANCEL_PROB)
 		return;
 	Car* car;
-	if (LATE.CancelRandomCar(car, false))
+	if (LATE.CancelRandomCar(car))
 		CancelCar(car);
 }
 
@@ -181,7 +181,6 @@ void Center::Step_FinishDiagnosis()
 	{
 		DIAG.dequeue(car, pri);
 		Bay* bay = car->ReleaseBay();
-		bay->addBusyTime(P1_DIAG_TIME);
 		ReturnBay(bay);
 
 		car->GenerateRandomServices();		// the diagnosis unit assigns random services
@@ -229,11 +228,10 @@ void Center::Step_FinishService()
 	{
 		SERV.dequeue(car, pri);
 		Bay* bay = car->ReleaseBay();
-		bay->addBusyTime(P1_SERV_TIME);
 		UnitType servedBy = bay->getType();
 		ReturnBay(bay);
 
-		car->CompleteService(servedBy, P1_SERV_TIME);
+		car->CompleteService(servedBy);
 
 		if (rand() % 100 < P1_FINISH_PROB)
 			FinishCar(car);
@@ -256,35 +254,25 @@ void Center::SimulateRandomTimestep()
 
 void Center::RunRandomSimulation()
 {
-	SimMode mode = ui.ReadMode();
-
 	CreateBays(P1_N_DU, P1_N_MU, P1_N_EU, P1_N_WU, P1_WB_CAP);
-	GenerateRandomCars(P1_NUM_CARS);
+	GenerateRandomCars(P1_NUM_CARS);		// 1. at least 1000 IDLE cars
 	currentTime = 1;
 
-	if (mode == SimMode::SILENT)
-		ui.PrintSilentStart();
+	ui.PrintStartMessage();
 
 	while (true)
 	{
-		SimulateRandomTimestep();
-
-		if (mode == SimMode::INTERACTIVE)
-		{
-			PrintInterface();				// 2.11
-			if (!AllCarsDone())
-				ui.WaitForKey();
-		}
+		SimulateRandomTimestep();		// 2.1 .. 2.10
+		PrintInterface();				// 2.11
 
 		if (AllCarsDone())				// 3. all cars are in FNSH or CNCL
 			break;
+
+		ui.WaitForKey();				// "PRESS ANY KEY TO MOVE TO NEXT STEP !"
 		currentTime++;
 	}
 
-	if (mode == SimMode::SILENT)
-		ui.PrintSilentEnd();
-	else
-		ui.PrintSimulationEnd(currentTime, FNSH->getCount(), CNCL->getCount());
+	ui.PrintSimulationEnd(currentTime, FNSH->getCount(), CNCL->getCount());
 }
 
 // =====================================================================

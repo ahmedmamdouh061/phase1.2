@@ -33,8 +33,7 @@ enum class SequenceType
 };
 
 // ---------------- Phase 1 random simulator parameters ----------------
-// (Phase 1 has no input file, so these values are fixed here.
-//  In Phase 2 the bay counts and probabilities come from the input file.)
+// (Phase 1 has no input file, so these values are fixed here.)
 // They are enum constants (not variables) so there are no global variables.
 enum SimConstants
 {
