@@ -14,6 +14,7 @@ class Bay
 protected:
 	int ID;				// bay number inside its unit (1, 2, 3, ...)
 	UnitType type;		// which unit the bay belongs to
+	int busyTime;		// total timesteps the bay was busy
 
 public:
 	Bay(int id, UnitType t);
@@ -21,6 +22,7 @@ public:
 
 	int getID() const;
 	UnitType getType() const;
+	int getBusyTime() const;
 
 	// Letter printed before the ID: D, M, E or W
 	char getPrefix() const;

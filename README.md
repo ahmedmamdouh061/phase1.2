@@ -15,13 +15,18 @@ If VS asks to "Retarget Projects", click **OK**.
 The program runs in **interactive mode** (the only mode required in Phase 1): it prints all
 lists each timestep and waits for **any key** ("PRESS ANY KEY TO MOVE TO NEXT STEP !").
 A run ends by itself when all cars are in FNSH or CNCL, after about **430–550 timesteps**.
-Hold a key down to move through the timesteps quickly.
+
+- **Any key** → next timestep (step by step)
+- **SHIFT** → go to the end: the remaining timesteps run without stopping, then the last
+  timestep's lists and the result are printed
 
 ## Phase 1.2 only
 
 This code contains only what Phase 1.2 asks for. None of the Phase 2 logic is included:
 no input/output files, no silent mode, no real assignment rules (ERLY/LATE/FS logic),
-no rescheduling, no statistics (TW, TS, utilization).
+no rescheduling, no statistics calculations. The data members for those values (Car TW/TS,
+Bay busy time, Center Pcancel/Presc) are declared because Phase 1.2 asks for the
+"Full data members of classes".
 
 The list operations `IDLE_List::InsertCar` and `ERLY_List::RemoveRandomCar` are kept because
 Phase 1.2 requires "Full implementation for all data structures" and "all the lists of the project

@@ -29,6 +29,7 @@ private:
 	// ---------------- units info ----------------
 	int N_DU, N_MU, N_EU, N_WU;	// number of bays in each unit
 	int WB_Cap;					// capacity of each wash bay
+	int Pcancel, Presc;			// cancel / reschedule probabilities (0..100)
 
 	// All bays (to delete them at the end). The free lists below point to the same objects.
 	DiagBay** diagBays;

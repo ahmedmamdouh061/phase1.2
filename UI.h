@@ -32,7 +32,12 @@ public:
 		cout << endl;
 	}
 
-	void WaitForKey() const;
+	// Waits for the user after each timestep:
+	//   any key -> returns true  (move to the next timestep)
+	//   SHIFT   -> returns false (go to the end of the simulation without stopping)
+	bool WaitForKey() const;
+
+	void PrintSkippingToEnd() const;
 
 	void PrintSimulationEnd(int timestep, int finished, int cancelled) const;
 };

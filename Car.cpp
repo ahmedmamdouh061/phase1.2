@@ -6,7 +6,7 @@ Car::Car(int id, int vt, int pt, int dd)
 	: ID(id), VT(vt), PT(pt), DD(dd),
 	seqType(SequenceType::SS), status(CarStatus::IDLE), assignedBay(nullptr),
 	currentUnit(UnitType::DU), currentEndTime(-1),
-	FT(-1), CT(-1)
+	FT(-1), CT(-1), TW(0), TS(0), rescheduled(false)
 {
 }
 
@@ -23,6 +23,9 @@ UnitType Car::getCurrentUnit() const { return currentUnit; }
 int Car::getCurrentEndTime() const { return currentEndTime; }
 int Car::getFT() const { return FT; }
 int Car::getCT() const { return CT; }
+int Car::getTW() const { return TW; }
+int Car::getTS() const { return TS; }
+bool Car::isRescheduled() const { return rescheduled; }
 
 // ---------------- state changes ----------------
 
@@ -113,7 +116,9 @@ void Car::Print(ostream& out) const
 		break;
 	case CarStatus::DIAG:
 	case CarStatus::SERV:
-		out << assignedBay;			// uses operator<< of Bay*
+		// Bay ID only, e.g. "D9", "M4", "W1" (no wash bay capacity here)
+		if (assignedBay)
+			out << assignedBay->getPrefix() << assignedBay->getID();
 		break;
 	case CarStatus::WAIT:
 		out << getNextServiceDuration();

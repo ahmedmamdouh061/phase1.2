@@ -7,7 +7,7 @@
 
 Center::Center()
 	: currentTime(1), totalCars(0),
-	N_DU(0), N_MU(0), N_EU(0), N_WU(0), WB_Cap(0),
+	N_DU(0), N_MU(0), N_EU(0), N_WU(0), WB_Cap(0), Pcancel(0), Presc(0),
 	diagBays(nullptr), mechBays(nullptr), elecBays(nullptr), washBays(nullptr),
 	CNCL(nullptr), FNSH(nullptr)
 {
@@ -260,17 +260,29 @@ void Center::RunRandomSimulation()
 
 	ui.PrintStartMessage();
 
+	bool stepByStep = true;				// false after the user presses SHIFT
+
 	while (true)
 	{
 		SimulateRandomTimestep();		// 2.1 .. 2.10
-		PrintInterface();				// 2.11
+
+		if (stepByStep)
+			PrintInterface();			// 2.11
 
 		if (AllCarsDone())				// 3. all cars are in FNSH or CNCL
 			break;
 
-		ui.WaitForKey();				// "PRESS ANY KEY TO MOVE TO NEXT STEP !"
+		if (stepByStep)
+		{
+			stepByStep = ui.WaitForKey();	// any key: next step, SHIFT: go to the end
+			if (!stepByStep)
+				ui.PrintSkippingToEnd();
+		}
 		currentTime++;
 	}
+
+	if (!stepByStep)
+		PrintInterface();				// show the lists at the last timestep
 
 	ui.PrintSimulationEnd(currentTime, FNSH->getCount(), CNCL->getCount());
 }

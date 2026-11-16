@@ -30,9 +30,12 @@ private:
 	UnitType currentUnit;	// the unit whose WAIT list / bay the car is in now
 	int currentEndTime;		// timestep the current diagnosis / service ends
 
-	// ---- printed in the FNSH / CNCL lists ----
+	// ---- timing data (FT and CT are printed in the FNSH / CNCL lists) ----
 	int FT;					// finish timestep (= cancel timestep for cancelled cars)
 	int CT;					// cancel timestep (-1 if not cancelled)
+	int TW;					// total waiting time (outside service bays)
+	int TS;					// total service time (inside service bays)
+	bool rescheduled;		// did the car reschedule its appointment?
 
 public:
 	Car(int id, int vt, int pt, int dd);
@@ -49,6 +52,9 @@ public:
 	int getCurrentEndTime() const;
 	int getFT() const;
 	int getCT() const;
+	int getTW() const;
+	int getTS() const;
+	bool isRescheduled() const;
 
 	// ---------- state changes ----------
 	void setStatus(CarStatus s);

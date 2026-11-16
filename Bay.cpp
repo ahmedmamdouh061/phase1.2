@@ -2,13 +2,15 @@
 
 // ======================= Bay =======================
 
-Bay::Bay(int id, UnitType t) : ID(id), type(t)
+Bay::Bay(int id, UnitType t) : ID(id), type(t), busyTime(0)
 {
 }
 
 int Bay::getID() const { return ID; }
 
 UnitType Bay::getType() const { return type; }
+
+int Bay::getBusyTime() const { return busyTime; }
 
 char Bay::getPrefix() const
 {
